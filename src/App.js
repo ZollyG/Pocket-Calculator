@@ -8,28 +8,31 @@ class App extends React.Component {
     this.handleKeyOperation = this.handleKeyOperation.bind(this);
     this.handleEqual = this.handleEqual.bind(this);
 
-    this.state = { display: "0", firstKeyPress: true, underOperation: false, result: 0 };
+    this.state = {
+      display: "0",
+      firstKeyPress: true,
+      underOperation: false,
+      result: 0,
+      displayOperation: " ",
+    };
   }
 
   handleKeyPress(str) {
     if (this.state.display.length >= 23) {
       return;
     }
+    let toDisplay = this.state.display;
     if (this.state.firstKeyPress) {
-      this.setState({
-        display: str,
-        firstKeyPress: false,
-        underOperation: this.state.underOperation,
-        result: this.state.result,
-      });
+      toDisplay = str;
     } else {
-      this.setState({
-        display: this.state.display + str,
-        firstKeyPress: false,
-        underOperation: this.state.underOperation,
-        result: this.state.result,
-      });
+      toDisplay = this.state.display + str;
     }
+    this.setState({
+      display: toDisplay,
+      firstKeyPress: false,
+      underOperation: this.state.underOperation,
+      result: this.state.result,
+    });
   }
 
   handleKeyOperation(str) {
@@ -65,6 +68,12 @@ class App extends React.Component {
       result = "ERR";
     }
     this.setState({
+      displayOperation:
+        String(this.state.result) +
+        " " +
+        this.state.underOperation +
+        " " +
+        this.state.display,
       display: String(result),
       firstKeyPress: true,
       underOperation: false,
@@ -74,6 +83,7 @@ class App extends React.Component {
 
   handleClear() {
     this.setState({
+      displayOperation: " ",
       display: "0",
       firstKeyPress: true,
       underOperation: false,
@@ -88,6 +98,8 @@ class App extends React.Component {
         <hr></hr>
         <div className="CalculatorArea">
           <div className="CalcDisplay">
+            <div>{this.state.displayOperation}</div>
+
             <div>{this.state.display}</div>
           </div>
           <div className="TopLine">

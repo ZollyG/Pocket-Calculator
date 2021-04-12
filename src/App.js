@@ -7,6 +7,7 @@ class App extends React.Component {
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleKeyOperation = this.handleKeyOperation.bind(this);
     this.handleEqual = this.handleEqual.bind(this);
+    this.handleBksp = this.handleBksp.bind(this);
 
     this.state = {
       display: "0",
@@ -18,7 +19,7 @@ class App extends React.Component {
   }
 
   handleKeyPress(str) {
-    if (this.state.display.length >= 23) {
+    if (this.state.display.length >= 23 || this.state.pressedEqual) {
       return;
     }
     let toDisplay = this.state.display;
@@ -32,23 +33,31 @@ class App extends React.Component {
       firstKeyPress: false,
       underOperation: this.state.underOperation,
       result: this.state.result,
+      pressedEqual: false,
     });
   }
 
   handleKeyOperation(str) {
-    if (this.state.firstKeyPress || this.state.underOperation) {
+    if (this.state.firstKeyPress || this.state.pressedEqual) {
       return;
     }
+    let result = this.state.display;
+    if (this.state.underOperation) {
+      result = this.handleEqual();
+    }
+
     this.setState({
-      display: this.state.display,
+      displayOperation: String(result) + " " + str,
+      display: 0,
       firstKeyPress: true,
       underOperation: str,
-      result: parseInt(this.state.display),
+      result: parseInt(result),
+      pressedEqual: false,
     });
   }
 
   handleEqual() {
-    if (this.state.firstKeyPress || !this.state.underOperation) {
+    if (this.state.firstKeyPress || this.state.pressedEqual) {
       return;
     }
 
@@ -60,25 +69,25 @@ class App extends React.Component {
       result = this.state.result - parseInt(this.state.display);
     } else if (this.state.underOperation === "X") {
       result = this.state.result * parseInt(this.state.display);
-    } else {
+    } else if (this.state.underOperation === "/") {
       result = this.state.result / parseInt(this.state.display);
+    } else {
+      result = this.state.display;
     }
 
     if (String(result).length >= 23 || result >= Number.MAX_SAFE_INTEGER) {
       result = "ERR";
     }
     this.setState({
-      displayOperation:
-        String(this.state.result) +
-        " " +
-        this.state.underOperation +
-        " " +
-        this.state.display,
+      displayOperation: this.state.displayOperation + " " + this.state.display,
       display: String(result),
       firstKeyPress: true,
       underOperation: false,
-      result: 0,
+      result: result,
+      pressedEqual: true,
     });
+
+    return result;
   }
 
   handleClear() {
@@ -88,6 +97,25 @@ class App extends React.Component {
       firstKeyPress: true,
       underOperation: false,
       result: 0,
+      pressedEqual: false,
+    });
+  }
+
+  handleBksp() {
+    if (this.firstKeyPress || this.state.pressedEqual) {
+      return;
+    }
+    let bksp = this.state.display;
+    bksp = bksp.split("");
+    bksp.pop();
+    bksp = bksp.join("");
+
+    this.setState({
+      displayOperation: this.state.displayOperation,
+      display: bksp,
+      firstKeyPress: this.state.firstKeyPress,
+      underOperation: this.state.underOperation,
+      result: this.state.result,
     });
   }
 
@@ -99,7 +127,6 @@ class App extends React.Component {
         <div className="CalculatorArea">
           <div className="CalcDisplay">
             <div>{this.state.displayOperation}</div>
-
             <div>{this.state.display}</div>
           </div>
           <div className="TopLine">
@@ -228,6 +255,24 @@ class App extends React.Component {
               }}
             >
               /
+            </button>
+          </div>
+          <div className="Line">
+            <button
+              className="BasicXLButton"
+              onClick={() => {
+                this.handleKeyPress("0");
+              }}
+            >
+              0
+            </button>
+            <button
+              className="BasicXLButton"
+              onClick={() => {
+                this.handleBksp();
+              }}
+            >
+              Bksp
             </button>
           </div>
         </div>

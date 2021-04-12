@@ -42,7 +42,7 @@ h1 {
   padding: 0.5%;
   margin: 0.2%;
   min-width: 24.6%;
-  min-height: 15vh;
+  min-height: 10vh;
   color: white;
   background-color: rebeccapurple;
   border: solid 2px black;
@@ -52,10 +52,21 @@ h1 {
 .SpecialButton {
   margin: 0.2%;
   min-width: 49.5%;
-  min-height: 15vh;
+  min-height: 10vh;
   font-size: 200%;
   padding: 0.5%;
   color: white;
   background-color: red;
+  border: solid 2px black;
+}
+
+.BasicXLButton {
+  margin: 0.2%;
+  min-width: 49.5%;
+  min-height: 10vh;
+  font-size: 200%;
+  padding: 0.5%;
+  color: white;
+  background-color: rebeccapurple;
   border: solid 2px black;
 }

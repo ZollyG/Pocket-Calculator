@@ -1,5 +1,6 @@
 import "./App.css";
 import React from "react";
+import { Helmet } from "react-helmet";
 
 class App extends React.Component {
   constructor(props) {
@@ -122,6 +123,9 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
+        <Helmet>
+          <title>pocket-calculator</title>
+        </Helmet>
         <h1>Calculator, React version</h1>
         <hr></hr>
         <div className="CalculatorArea">
